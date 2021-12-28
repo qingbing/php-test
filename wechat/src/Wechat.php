@@ -42,6 +42,12 @@ class Wechat extends Singleton
             ]);
             exit;
         }
+        if (isset($_GET['uid'])) {
+            $this->getUnionid([
+                'name' => 'lili',
+            ]);
+            exit;
+        }
         $this->app->server->push(function ($message) {
             \Zf\Helper\FileHelper::putContent("runtime/message.txt", print_r($message, true));
             switch ($message['MsgType']) {
@@ -88,6 +94,14 @@ class Wechat extends Singleton
         var_dump($res);
 
         $res = $this->app->qrcode->url($res['ticket']);
+        var_dump($res);
+    }
+
+    protected function getUnionid()
+    {
+        $openid = $_GET['openid'] ?? 'o747CuDtCcMTHU61p7oW2Rs7lOE4';
+        $res    = $this->app->user->get($openid);
+        var_dump("getUnionid");
         var_dump($res);
     }
 }
