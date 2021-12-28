@@ -1,0 +1,11 @@
+{
+  "require": {
+    "qingbing/zf-helper": "^1.0",
+    "overtrue/wechat": "^4.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zf\\Wechat\\": "src"
+    }
+  }
+}
