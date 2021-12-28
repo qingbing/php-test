@@ -17,6 +17,9 @@ class Wechat extends Singleton
     public    $configToken = 'qingbing-test';
     public    $appId       = 'wxf9661570cc5819d3';
     public    $appSecret   = '0a36801f7dc4b4b7f3d97a74bb927d0a';
+    /**
+     * @var \EasyWeChat\OfficialAccount\Application
+     */
     protected $app;
 
     protected function init()
@@ -31,6 +34,12 @@ class Wechat extends Singleton
     {
         if (isset($_GET['echostr'])) {
             $this->checkSignature();
+            exit;
+        }
+        if (isset($_GET['qr'])) {
+            $this->createQrCode([
+                'name' => 'lili',
+            ]);
             exit;
         }
         $this->app->server->push(function ($message) {
@@ -66,5 +75,16 @@ class Wechat extends Singleton
         } else {
             return false;
         }
+    }
+
+    protected function createQrCode($params = [])
+    {
+        $res = $this->app->qrcode->temporary('qingbing', 600);
+        var_dump($res);
+    }
+
+    protected function getQrUrl($params = [])
+    {
+        $this->app->qrcode->url('qingbing', 600);
     }
 }
