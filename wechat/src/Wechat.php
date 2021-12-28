@@ -7,26 +7,60 @@
 
 namespace Zf\Wechat;
 
-class Wechat
+use Zf\Helper\Abstracts\Singleton;
+
+class Wechat extends Singleton
 {
     /**
-     * 验证
+     * @var string 首次配置时填写的token字符串
+     */
+    public    $configToken = 'qingbing-test';
+    public    $appId       = 'wxf9661570cc5819d3';
+    public    $appSecret   = '0a36801f7dc4b4b7f3d97a74bb927d0a';
+    protected $app;
+
+    protected function init()
+    {
+        $this->app = \EasyWeChat\Factory::officialAccount([
+            'app_id' => $this->appId,
+            'secret' => $this->appSecret,
+        ]);
+    }
+
+    public function run()
+    {
+        if (isset($_GET['echostr'])) {
+            $this->checkSignature();
+            exit;
+        }
+        $this->app->server->push(function ($message) {
+            switch ($message['MsgType']) {
+                case 'event':
+                    \Zf\Helper\FileHelper::putContent("runtime-evet", print_r($message, true));
+                    break;
+                case 'text':
+                    \Zf\Helper\FileHelper::putContent("runtime-text", print_r($message, true));
+                    break;
+            }
+        });
+        $response = $this->app->server->serve();
+        $response->send();
+    }
+
+    /**
+     * 一次性使用归属验证
+     *
      * @param $token
      * @return bool
      */
-    public static function checkSignature($token)
+    protected function checkSignature()
     {
-        $signature = $_GET["signature"];
-        $timestamp = $_GET["timestamp"];
-        $nonce     = $_GET["nonce"];
-
-        $tmpArr = array($token, $timestamp, $nonce);
+        $tmpArr = array($this->configToken, $_GET["timestamp"], $_GET["nonce"]);
         sort($tmpArr, SORT_STRING);
         $tmpStr = implode($tmpArr);
         $tmpStr = sha1($tmpStr);
-
-        if ($tmpStr == $signature) {
-            echo $_GET['echostr'] ?? 'error';
+        if ($tmpStr == $_GET["signature"]) {
+            echo $_GET['echostr'];
         } else {
             return false;
         }
