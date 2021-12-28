@@ -34,12 +34,13 @@ class Wechat extends Singleton
             exit;
         }
         $this->app->server->push(function ($message) {
+            \Zf\Helper\FileHelper::putContent("runtime-message.txt", print_r($message, true));
             switch ($message['MsgType']) {
                 case 'event':
-                    \Zf\Helper\FileHelper::putContent("runtime-evet", print_r($message, true));
+                    \Zf\Helper\FileHelper::putContent("runtime-event.txt", print_r($message, true));
                     break;
                 case 'text':
-                    \Zf\Helper\FileHelper::putContent("runtime-text", print_r($message, true));
+                    \Zf\Helper\FileHelper::putContent("runtime-text.txt", print_r($message, true));
                     break;
             }
         });

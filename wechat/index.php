@@ -12,5 +12,5 @@ try {
     \Zf\Wechat\Wechat::getInstance()->run();
 }
 catch (\Exception $e) {
-    \Zf\Helper\FileHelper::putContent("runtime-index", print_r($e, true));
+    \Zf\Helper\FileHelper::putContent("runtime-index.txt", print_r($e, true));
 }
