@@ -37,7 +37,7 @@ class Wechat extends Singleton
             exit;
         }
         if (isset($_GET['qr'])) {
-            $this->createQrCode([
+            $this->getQrUrl([
                 'name' => 'lili',
             ]);
             exit;
