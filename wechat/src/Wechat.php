@@ -34,13 +34,13 @@ class Wechat extends Singleton
             exit;
         }
         $this->app->server->push(function ($message) {
-            \Zf\Helper\FileHelper::putContent("runtime-message.txt", print_r($message, true));
+            \Zf\Helper\FileHelper::putContent("runtime/message.txt", print_r($message, true));
             switch ($message['MsgType']) {
                 case 'event':
-                    \Zf\Helper\FileHelper::putContent("runtime-event.txt", print_r($message, true));
+                    \Zf\Helper\FileHelper::putContent("runtime/event.txt", print_r($message, true));
                     break;
                 case 'text':
-                    \Zf\Helper\FileHelper::putContent("runtime-text.txt", print_r($message, true));
+                    \Zf\Helper\FileHelper::putContent("runtime/text.txt", print_r($message, true));
                     break;
             }
         });
@@ -60,6 +60,7 @@ class Wechat extends Singleton
         sort($tmpArr, SORT_STRING);
         $tmpStr = implode($tmpArr);
         $tmpStr = sha1($tmpStr);
+        \Zf\Helper\FileHelper::putContent("runtime/echostr.txt", print_r($_GET['echostr'], true));
         if ($tmpStr == $_GET["signature"]) {
             echo $_GET['echostr'];
         } else {
