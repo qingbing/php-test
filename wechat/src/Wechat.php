@@ -53,6 +53,10 @@ class Wechat extends Singleton
             switch ($message['MsgType']) {
                 case 'event':
                     \Zf\Helper\FileHelper::putContent("runtime/event.txt", print_r($message, true));
+                    \Zf\Helper\FileHelper::putContent("runtime/data.txt", print_r([
+                        'message' => $message,
+                        'data'    => $this->getUnionidByOpenid($message['FromUserName']),
+                    ], true));
                     break;
                 case 'text':
                     \Zf\Helper\FileHelper::putContent("runtime/text.txt", print_r($message, true));
@@ -95,6 +99,11 @@ class Wechat extends Singleton
 
         $res = $this->app->qrcode->url($res['ticket']);
         var_dump($res);
+    }
+
+    protected function getUnionidByOpenid($openid)
+    {
+        return $this->app->user->get($openid);
     }
 
     protected function getUnionid()
